@@ -6,13 +6,31 @@ import java.io.File;
 
 public class pasutijumuVesture {
     public static void main(String[] args) {
-        test();
+        ex2();
     }
 
-    public static void test() {
+    public static void ex1() {
         try(Scanner reader = new Scanner(new File("data/file.csv"))){
             while (reader.hasNextLine()) {
                 System.out.println(reader.nextLine());
+            }
+        } catch (Exception e) {
+            System.out.println("Error " + e.getMessage());
+        }
+    }
+
+    public static void ex2() {
+        try(Scanner reader = new Scanner(new File("data/file.csv"))){
+            while (reader.hasNextLine()) {
+                // System.out.println(reader.nextLine());
+                String row = reader.nextLine();
+                String[] parts = row.split(",");
+                String name = parts[0];
+                int age = Integer.valueOf(parts[1]);
+                String email = parts[3];
+                String course = parts[4];
+                double gpa = Double.valueOf(parts[5]);
+                System.out.printf("");
             }
         } catch (Exception e) {
             System.out.println("Error " + e.getMessage());
