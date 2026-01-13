@@ -27,10 +27,10 @@ public class pasutijumuVesture {
                 String[] parts = row.split(",");
                 String name = parts[0];
                 int age = Integer.valueOf(parts[1]);
-                String email = parts[3];
-                String course = parts[4];
-                double gpa = Double.valueOf(parts[5]);
-                System.out.printf("");
+                String email = parts[2];
+                String course = parts[3];
+                double gpa = Double.valueOf(parts[4]);
+                System.out.println("Vārds :"+ name + ", vecums: " + age + ", epasts: " + email + ", kurss: " + course + ", GPA: " + gpa);
             }
         } catch (Exception e) {
             System.out.println("Error " + e.getMessage());
