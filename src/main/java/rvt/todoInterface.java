@@ -5,9 +5,11 @@ import java.io.File;
 
 public class todoInterface {
 
-    // public void () {
-        
-    // }
+    public void start() {
+        while (true) {
+            
+        }
+    }
 
     
 
