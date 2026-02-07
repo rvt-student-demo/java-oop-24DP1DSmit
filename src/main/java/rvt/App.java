@@ -1,16 +1,15 @@
 package rvt;
 
+import java.util.Scanner;
+
 public class App {
     public static void main(String[] args) {
-        todo myObj = new todo();
-        myObj.add("Task ex1");
-        myObj.add("Task ex2");
-        myObj.add("Task ex3");
-
-        myObj.list();
-
-        myObj.remove(2);
-
-        myObj.list();
+        todo todoList = new todo();
+        Scanner scanner = new Scanner(System.in);
+        
+        todoInterface ui = new todoInterface(todoList, scanner);
+        ui.start();
+        
+        scanner.close();
     }
 }

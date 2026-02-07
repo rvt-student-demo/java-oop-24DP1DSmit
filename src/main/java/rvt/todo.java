@@ -28,6 +28,7 @@ public class todo {
         }
     }
 
+
     public void remove(int id) {
         ArrayList<String> tasks = new ArrayList<>();
         try (Scanner reader = new Scanner(new File("data/todo.csv"))) {
@@ -40,6 +41,7 @@ public class todo {
             return;
         }
 
+  
         if (id < 1 || id > tasks.size()) {
             System.out.println("Invalid ID");
             return;
