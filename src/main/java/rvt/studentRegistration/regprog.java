@@ -38,7 +38,7 @@ public class regprog {
     }
 
     public void addwriter(String line) {
-        try (FileWriter writer = new FileWriter("reg.csv", true)) {
+        try (FileWriter writer = new FileWriter("data/reg.csv", true)) {
             writer.write("\n" + line);
             System.out.println("Successfully appended to the file.");
         } catch (IOException e) {
@@ -48,7 +48,7 @@ public class regprog {
     }
 
     public void list() {
-        File myFile = new File("reg.csv");
+        File myFile = new File("data/reg.csv");
         System.out.println("");
         System.out.println("");
         try (Scanner reader = new Scanner(myFile)) {
@@ -84,7 +84,7 @@ public class regprog {
         System.out.println("removing");
         String persCodes = scanner.nextLine();
         ArrayList<String> stringi = new ArrayList<String>();
-        File file = new File("reg.csv");
+        File file = new File("data/reg.csv");
         try (Scanner myReader = new Scanner(file)) {
             while (myReader.hasNextLine()) {
                 String data = myReader.nextLine();
@@ -104,7 +104,7 @@ public class regprog {
                 break;
             }
         }
-        try (FileWriter writer = new FileWriter("reg.csv", false)) {
+        try (FileWriter writer = new FileWriter("data/reg.csv", false)) {
             for (int index = 0; index < stringi.size(); index++) {
                 if (index != stringi.size() - 1) {
                     writer.write(stringi.get(index) + "\n");
@@ -124,7 +124,7 @@ public class regprog {
         System.out.println("changeing");
         String persCodes = scanner.nextLine();
         ArrayList<String> stringi = new ArrayList<String>();
-        File file = new File("reg.csv");
+        File file = new File("data/reg.csv");
         try (Scanner myReader = new Scanner(file)) {
             while (myReader.hasNextLine()) {
                 String data = myReader.nextLine();
@@ -144,7 +144,7 @@ public class regprog {
                 break;
             }
         }
-        try (FileWriter writer = new FileWriter("reg.csv", false)) {
+        try (FileWriter writer = new FileWriter("data/reg.csv", false)) {
             for (int index = 0; index < stringi.size(); index++) {
                 if (index != stringi.size() - 1) {
                     writer.write(stringi.get(index) + "\n");
