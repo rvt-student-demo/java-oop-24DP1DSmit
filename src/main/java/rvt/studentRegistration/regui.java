@@ -1,4 +1,4 @@
-package rvt;
+package rvt.studentRegistration;
 
 import java.util.Scanner;
 
@@ -9,6 +9,7 @@ public class regui {
     public void start() {
         String[] comands = { "end", "add", "remove", "list", "help", "change" };
         Boolean end = false;
+        Boolean invalid = false;
         System.out.print("available comands: ");
         for (int i = 0; i < comands.length; i++) {
             if (i == comands.length-1) {
@@ -47,13 +48,16 @@ public class regui {
                 if (caller.equals(comands[5])) {
                     prog.change();
                     break;
+                }else{
+                    invalid = true;
                 }
             }
             if (end) {
                 break;
             }
-
-            System.out.println("Enter command");
+            if (invalid) {
+                System.out.println("Enter a valid comand! You can type 'help' to see all comands.");
+            }
         }
     }
 }

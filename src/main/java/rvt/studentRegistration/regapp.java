@@ -1,4 +1,4 @@
-package rvt;
+package rvt.studentRegistration;
 
 public class regapp {
     public static void main(String[] args) {
