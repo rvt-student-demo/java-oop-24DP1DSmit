@@ -4,15 +4,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class todoGUI extends JFrame {
     private todo todoList;
     private JTextArea taskDisplayArea;
     private JTextField taskInputField;
     private JSpinner idSpinner;
+    private JButton removeButton;
     private JPanel mainPanel;
 
     public todoGUI(todo todoList) {
@@ -79,10 +78,10 @@ public class todoGUI extends JFrame {
         removePanel.setLayout(new BorderLayout(5, 5));
         removePanel.add(new JLabel("Remove Task ID:"), BorderLayout.WEST);
         
-        idSpinner = new JSpinner(new SpinnerNumberModel(1, 1, 100, 1));
+        idSpinner = new JSpinner(new SpinnerNumberModel(1, 1, 1, 1));
         removePanel.add(idSpinner, BorderLayout.CENTER);
         
-        JButton removeButton = new JButton("Remove");
+        removeButton = new JButton("Remove");
         removeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -128,43 +127,25 @@ public class todoGUI extends JFrame {
     }
 
     private void displayTasks() {
-        taskDisplayArea.setText("");
-        try (Scanner reader = new Scanner(new File("data/todo.csv"))) {
-            int id = 1;
-            StringBuilder tasks = new StringBuilder();
-            while (reader.hasNextLine()) {
-                String line = reader.nextLine();
-                tasks.append(id).append(": ").append(line).append("\n");
-                id++;
+        ArrayList<String> tasks = todoList.getAllTasks();
+        if (tasks.isEmpty()) {
+            taskDisplayArea.setText("No tasks yet. Add a new task to get started!");
+            removeButton.setEnabled(false);
+        } else {
+            StringBuilder display = new StringBuilder();
+            for (int i = 0; i < tasks.size(); i++) {
+                display.append(i + 1).append(": ").append(tasks.get(i)).append("\n");
             }
-            if (tasks.length() == 0) {
-                taskDisplayArea.setText("No tasks yet. Add a new task to get started!");
-            } else {
-                taskDisplayArea.setText(tasks.toString());
-            }
-        } catch (Exception e) {
-            taskDisplayArea.setText("Error loading tasks: " + e.getMessage());
+            taskDisplayArea.setText(display.toString());
+            removeButton.setEnabled(true);
         }
+
+        int max = Math.max(1, tasks.size());
+        idSpinner.setModel(new SpinnerNumberModel(1, 1, max, 1));
     }
 
     private void removeTask() {
         int id = (Integer) idSpinner.getValue();
-        ArrayList<String> tasks = new ArrayList<>();
-        try (Scanner reader = new Scanner(new File("data/todo.csv"))) {
-            while (reader.hasNextLine()) {
-                String line = reader.nextLine();
-                tasks.add(line);
-            }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error reading tasks: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        if (id < 1 || id > tasks.size()) {
-            JOptionPane.showMessageDialog(this, "Invalid ID. Please enter a valid task number.", "Invalid ID", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
         todoList.remove(id);
         JOptionPane.showMessageDialog(this, "Task removed successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
         displayTasks();

@@ -1,60 +1,71 @@
 package rvt;
 
-import java.util.Scanner;
-import java.io.File;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
-import java.io.FileWriter;
-import java.io.IOException;
 
 public class todo {
+    private final tododb db;
+
+    public todo() {
+        this.db = new tododb();
+    }
+
     public void add(String task) {
-        try (FileWriter writer = new FileWriter("data/todo.csv", true)) {
-            writer.write(task + "\n");
-        } catch (IOException e) {
-            System.out.println("Error " + e.getMessage());
+        String sql = "INSERT INTO todo(task) VALUES(?)";
+        try (Connection conn = db.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, task);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error adding task: " + e.getMessage());
         }
     }
 
     public void list() {
-        try (Scanner reader = new Scanner(new File("data/todo.csv"))) {
-            int id = 1;
-            while (reader.hasNextLine()) {
-                String line = reader.nextLine();
-                System.out.println(id + ": " + line);
-                id++;
+        String sql = "SELECT id, task FROM todo ORDER BY id";
+        try (Connection conn = db.connect();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String task = rs.getString("task");
+                System.out.println(id + ": " + task);
             }
-        } catch (Exception e) {
-            System.out.println("Error " + e.getMessage());
+        } catch (SQLException e) {
+            System.out.println("Error listing tasks: " + e.getMessage());
         }
     }
 
+    public ArrayList<String> getAllTasks() {
+        ArrayList<String> tasks = new ArrayList<>();
+        String sql = "SELECT task FROM todo ORDER BY id";
+        try (Connection conn = db.connect();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                tasks.add(rs.getString("task"));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error reading tasks: " + e.getMessage());
+        }
+        return tasks;
+    }
 
     public void remove(int id) {
-        ArrayList<String> tasks = new ArrayList<>();
-        try (Scanner reader = new Scanner(new File("data/todo.csv"))) {
-            while (reader.hasNextLine()) {
-                String line = reader.nextLine();
-                tasks.add(line);
+        String sql = "DELETE FROM todo WHERE id = ?";
+        try (Connection conn = db.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, id);
+            int deletedRows = pstmt.executeUpdate();
+            if (deletedRows == 0) {
+                System.out.println("Invalid ID");
             }
-        } catch (Exception e) {
-            System.out.println("Error " + e.getMessage());
-            return;
-        }
-
-  
-        if (id < 1 || id > tasks.size()) {
-            System.out.println("Invalid ID");
-            return;
-        }
-
-        tasks.remove(id - 1);
-
-        try (FileWriter writer = new FileWriter("data/todo.csv")) {
-            for (String task : tasks) {
-                writer.write(task + "\n");
-            }
-        } catch (IOException e) {
-            System.out.println("Error " + e.getMessage());
+        } catch (SQLException e) {
+            System.out.println("Error removing task: " + e.getMessage());
         }
     }
 }
